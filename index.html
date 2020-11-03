@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expression Parser</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="calculator">
+        <div class="screen">
+          <div id="expr">√(12+—3)+5</div>
+          <div id="ans">0</div>
+        </div>
+        <div class="buttons">                          
+          <button id="(">(</button>
+          <button id=")">)</button>
+          <button id="sqrt">√</button>          
+          <button id="clear">C</button>          
+          <button id="factorial">!</button>          
+          <button id="exponent">^</button>
+          <button id="sign">±</button>
+          <button id="divide">÷</button>
+          <button id="7">7</button>
+          <button id="8">8</button>
+          <button id="9">9</button>
+          <button id="multiply">✕</button>
+          <button id="4">4</button>
+          <button id="5">5</button>
+          <button id="6">6</button>
+          <button id="subtract">—</button>
+          <button id="1">1</button>
+          <button id="2">2</button>
+          <button id="3">3</button>
+          <button id="add">+</button>
+          <button id="dot">.</button>
+          <button id="0">0</button>
+          <button id="answer">ANS</button>
+          <button id="equals">=</button>
+        </div>
+      </div>
+    </div>
+    <script src="parser.js"></script>
+    <script src="evaluate.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
