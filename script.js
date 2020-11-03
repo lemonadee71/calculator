@@ -80,9 +80,10 @@ equalsButton.addEventListener('click', () => {
       ans.textContent = ''
     }, 1000)
   } else {
-    ans.textContent = `${answer}`.length > 10 ? `${answer.toExponential(10)}` : `${answer}`
+    ans.textContent = `${answer}`.length > 12 ? `${answer.toExponential(10)}` : `${answer}`
   }
 
+  console.log(tree)
   console.log(expr)
   previousAnswer = answer
   previousAction = 'equals'

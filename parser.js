@@ -92,25 +92,38 @@ const parse = (expr) => {
           nodes.push(new Node(match[0]))
           expr = expr.replace(/^[a-z]+/, '')
         } else {         
+          if (prev && prev === ')') {
+            nodes.push(new Node('*'))
+          }
+
           nodes.push(new Node(match[0]))
           expr = expr.replace(/^[\d.]+/, '')
         }
 
         prev = match[0]
       } else {
-        let operator = expr.charAt(0)
-
-        if (operator === '-' && !'()'.includes(prev) && isNaN(prev)) {
+        let char = expr.charAt(0)
+        
+        if (prev && !isNaN(prev) && '(√sincostan'.includes(char)) {
+          nodes.push(new Node('*'))
+        } 
+        if (prev && prev === ')' && '√sincostan'.includes(char)) {
+          nodes.push(new Node('*'))
+        } else if (prev && prev === ')' && char === '(') {
+          nodes.push(new Node('*'))
+        }
+        
+        if (char === '-' && !'()'.includes(prev) && isNaN(prev)) {
           nodes.push(new Node('ve'))
         } else {
-          nodes.push(new Node(operator))
+          nodes.push(new Node(char))
         }      
 
-        expr = expr.replace(operator, '')
-        prev = operator
+        expr = expr.replace(char, '')
+        prev = char
       }
     }   
-
+    console.log(nodes)
     return createTree(nodes)
   } catch(error) {
     console.log(error)
