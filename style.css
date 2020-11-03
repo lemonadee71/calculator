@@ -1,14 +1,13 @@
 .container {
   width: 70%;
   margin: auto;
-  background-color: aliceblue;
 }
 
 .calculator {
   width: 350px;
   height: 500px;
   margin: auto;
-  background-color: antiquewhite;
+  background-color: gray;
   display: grid;
   grid-template-rows: 1fr 4fr;
   box-sizing: border-box;
@@ -35,7 +34,7 @@
 #ans {
   padding-top: 15px;
   text-align: right;
-  background-color: aqua;
+  overflow: hidden;
 }
 
 .buttons {
