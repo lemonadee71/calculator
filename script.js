@@ -78,7 +78,7 @@ equalsButton.addEventListener('click', () => {
     ans.textContent = 'ERROR'
     setTimeout(() => {
       ans.textContent = ''
-    }, 1000)
+    }, 1500)
   } else {
     ans.textContent = `${answer}`.length > 12 ? `${answer.toExponential(10)}` : `${answer}`
   }
