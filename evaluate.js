@@ -17,13 +17,19 @@ const calculator = (type, x, y) => {
     case 'multiply':
       return x * y;
     case 'divide':
+      if (y === 0)
+        throw 'MathError'
       return x / y;
     case 'exponent':
       return x ** y; 
     case 'factorial':
+      if (x < 0 || y < 0)
+        throw 'MathError'
       return factorial(x || y)
     case 'negative':
       return -1 * (x || y)
+    case 'positive':
+      return x || y
     case 'sin':
       return Math.sin(x || y)
     case 'cos':

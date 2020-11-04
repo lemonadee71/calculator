@@ -24,6 +24,11 @@ let operatorList = {
     text: 'negative',
     precedence: 3
   },
+  'pl': {
+    type: 'operator',
+    text: 'positive',
+    precedence: 3
+  },
   '*': {
     type: 'operator',
     text: 'multiply',
@@ -77,64 +82,73 @@ function Node(x) {
 }
 
 const parse = (expr) => {
-  try {
-    let nodes = [],
-     prev = null
+  let nodes = [],
+    prev = null,
+    nums = 0
 
-    while(expr) {
-      let match = expr.match(/^[\d.]+/) || expr.match(/^[a-z]+/)
-      
-      if (match) {
-        if (isNaN(match[0])) {
-          if (match[0].includes('.'))
-            throw 'MathError. Decimal point is more than 1.'
+  while(expr) {
+    let match = expr.match(/^[\d.]+/) || expr.match(/^[a-z]+/)
+    
+    if (match) {
+      if (isNaN(match[0])) {
+        if (match[0].includes('.'))
+          throw 'SyntaxError' // Decimal point is more than 1
 
-          nodes.push(new Node(match[0]))
-          expr = expr.replace(/^[a-z]+/, '')
-        } else {         
-          // for cases like (3)3 and sin(30)3
-          if (prev && prev === ')') {
-            throw 'SyntaxError'
-          }
-
-          nodes.push(new Node(match[0]))
-          expr = expr.replace(/^[\d.]+/, '')
+        nodes.push(new Node(match[0]))
+        expr = expr.replace(/^[a-z]+/, '')
+      } else {         
+        // for cases like (3)3 and sin(30)3
+        if (prev && prev === ')') {
+          throw 'SyntaxError'
         }
 
-        prev = match[0]
-      } else {
-        let char = expr.charAt(0)
-        
-        // for cases like 3(3) and 3sin(30)
-        if (prev && !isNaN(prev) && '(√sincostan'.includes(char)) {
-          nodes.push(new Node('*'))
-        } 
+        nodes.push(new Node(match[0]))
+        expr = expr.replace(/^[\d.]+/, '')
 
-        // for cases like 3(3)√4 and 3sin(30)
-        // for cases like (3)(3) and sin(30)(3)
-        if (prev && prev === ')' && '√sincostan'.includes(char)) {
-          nodes.push(new Node('*'))
-        } else if (prev && prev === ')' && char === '(') {
-          nodes.push(new Node('*'))
-        }
-        
-        if (char === '-' && !'()'.includes(prev) && isNaN(prev)) {
-          nodes.push(new Node('ve'))
-        } else {
-          nodes.push(new Node(char))
-        }      
-
-        expr = expr.replace(char, '')
-        prev = char
+        nums++
       }
-    }   
-    console.log(nodes)
-    return createTree(nodes)
-  } catch(error) {
-    console.log(error)
-    return error
-  }
+
+      prev = match[0]
+    } else {
+      let char = expr.charAt(0)
+      
+      // for cases like 3(3) and 3sin(30)
+      if (prev && !isNaN(prev) && '(√sincostan'.includes(char)) {
+        nodes.push(new Node('*'))
+      } 
+
+      // for cases like 3(3)√4 and sin(30)cos(30)
+      // for cases like (3)(3) and sin(30)(3)
+      if (prev && prev === ')' && '√sincostan'.includes(char)) {
+        nodes.push(new Node('*'))
+      } else if (prev && prev === ')' && char === '(') {
+        nodes.push(new Node('*'))
+      }
+      
+      if ('+-*/'.includes(prev) && '*/'.includes(char)) {
+        throw 'SyntaxError'
+      }
+
+      if (char === '-' && !'()'.includes(prev) && isNaN(prev)) {
+        nodes.push(new Node('ve'))
+      } else if (char === '+' && !'()'.includes(prev) && isNaN(prev)) {
+        nodes.push(new Node('pl'))
+      } else {
+        nodes.push(new Node(char))
+      }      
+
+      expr = expr.replace(char, '')
+      prev = char
+    }
+  }   
   
+  // Should contain numbers
+  if (nums === 0)
+    throw 'SyntaxError' 
+
+  console.log(nodes)
+
+  return createTree(nodes)  
 }
 
 const createTree = (nodes) => {
@@ -159,7 +173,7 @@ const insertToTree = (currentNode, newNode) => {
     return deleteNode(currentNode)
   }
 
-  if (newNode.text !== 'negative' && newNode.type !== 'bracket' && condition) {   
+  if (newNode.text !== 'positive' && newNode.text !== 'negative' && newNode.type !== 'bracket' && condition) {   
     return insertToTree(currentNode.parent, newNode)
   } else {
     newNode.leftChild = currentNode.rightChild

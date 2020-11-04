@@ -71,20 +71,18 @@ equalsButton.addEventListener('click', () => {
   expr = expr.replace(/÷/g, '/')
   expr = expr.replace(/ANS/, `${previousAnswer}`)
 
-  let tree = parse(expr),
+  try {
+    let tree = parse(expr),
     answer = evaluate(tree)
-
-  if (isNaN(answer)) {
-    ans.textContent = 'ERROR'
+    ans.textContent = `${answer}`.length > 12 ? `${answer.toExponential(10)}` : `${answer}`
+    console.log(tree)
+    previousAnswer = answer
+    previousAction = 'equals'
+  } catch(err) {
+    console.log(err)
+    ans.textContent = err.toString()
     setTimeout(() => {
       ans.textContent = ''
     }, 1500)
-  } else {
-    ans.textContent = `${answer}`.length > 12 ? `${answer.toExponential(10)}` : `${answer}`
-  }
-
-  console.log(tree)
-  console.log(expr)
-  previousAnswer = answer
-  previousAction = 'equals'
+  }  
 })
